@@ -2,127 +2,114 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Mail, Phone, MapPin, Globe, Code, Send } from "lucide-react";
-
-const contactMethods = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "sathishlellaa@gmail.com",
-    href: "mailto:sathishlellaa@gmail.com",
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    value: "+60 1119998931",
-    href: "tel:+601119998931",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Selangor, Malaysia",
-    href: "#",
-  },
-  {
-    icon: Globe,
-    label: "LinkedIn",
-    value: "linkedin.com/in/sathishlella",
-    href: "https://linkedin.com/in/sathishlella",
-  },
-  {
-    icon: Code,
-    label: "GitHub",
-    value: "github.com/sathishlella",
-    href: "https://github.com/sathishlella",
-  },
-];
+import MagneticButton from "./MagneticButton";
 
 export default function Contact() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const ref = useRef<HTMLElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="contact" className="py-24 px-6 bg-surface/30">
-      <div className="max-w-6xl mx-auto">
+    <section
+      ref={ref}
+      id="contact"
+      className="relative overflow-hidden px-6 py-32 md:px-14 md:py-48"
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/12 blur-[150px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-[1100px] text-center">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
+          className="kicker mb-8"
         >
-          <span className="text-xs font-semibold tracking-widest text-accent-cyan uppercase mb-4 block">
-            Contact
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Let&apos;s <span className="gradient-text">connect</span>
-          </h2>
-          <p className="text-muted mb-12 max-w-xl">
-            I am actively interviewing for AI Engineering roles in Singapore and
-            remote positions. If you are hiring or want to collaborate, reach out.
-          </p>
+          // Let&apos;s talk
+        </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              {contactMethods.map((method, i) => (
-                <motion.a
-                  key={method.label}
-                  href={method.href}
-                  target={method.href.startsWith("http") ? "_blank" : undefined}
-                  rel={method.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border hover:border-border-hover transition-all group"
-                >
-                  <div className="p-2.5 rounded-lg bg-accent-cyan/10 text-accent-cyan group-hover:bg-accent-cyan/20 transition-colors">
-                    <method.icon size={18} />
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-dark">{method.label}</div>
-                    <div className="text-sm font-medium text-foreground group-hover:text-accent-cyan transition-colors">
-                      {method.value}
-                    </div>
-                  </div>
-                </motion.a>
-              ))}
-            </div>
+        <h2 className="headline mb-8 text-[clamp(3rem,9vw,9rem)] text-ink">
+          {["Hiring", "for", "an", "AI"].map((w, i) => (
+            <Word key={i} word={w} delay={0.1 + i * 0.05} inView={inView} />
+          ))}{" "}
+          <span className="headline-italic text-accent">Engineer?</span>
+        </h2>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="p-6 rounded-xl bg-surface border border-border"
-            >
-              <h3 className="text-lg font-semibold text-foreground mb-4">
-                Quick Message
-              </h3>
-              <p className="text-sm text-muted mb-4">
-                Prefer to send a quick note? Click below to open your email client
-                with a pre-filled subject.
-              </p>
-              <a
-                href="mailto:sathishlellaa@gmail.com?subject=Opportunity%20for%20Sathish%20Lella"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-cyan text-background font-semibold hover:bg-accent-cyan/90 transition-colors"
-              >
-                <Send size={16} />
-                Send Email
-              </a>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+          className="mx-auto mb-14 max-w-[680px] text-balance text-lg text-ink-dim md:text-xl"
+        >
+          Multi-agent systems, RAG pipelines, production AI infrastructure.
+          Open to <span className="text-accent">Singapore EP-sponsored</span> roles
+          and remote work with Singapore-grade comp. I reply to every email within 24 hours.
+        </motion.p>
 
-              <div className="mt-6 pt-6 border-t border-border">
-                <div className="text-xs text-muted-dark mb-2">
-                  Availability
-                </div>
-                <div className="text-sm text-foreground">
-                  Monday – Friday: Full-time
-                </div>
-                <div className="text-sm text-muted">
-                  Saturday – Sunday: DBA classes (Taylor&apos;s University)
-                </div>
-              </div>
-            </motion.div>
-          </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
+          className="flex flex-wrap items-center justify-center gap-4"
+        >
+          <MagneticButton href="mailto:sathishlellaa@gmail.com" strength={0.4}>
+            <span className="group inline-flex items-center gap-3 rounded-full bg-accent px-8 py-5 text-[15px] font-semibold text-bg transition-colors hover:bg-accent-warm">
+              sathishlellaa@gmail.com
+              <span className="font-mono text-xs opacity-70 transition-transform group-hover:translate-x-0.5">
+                ↗
+              </span>
+            </span>
+          </MagneticButton>
+          <MagneticButton href="https://linkedin.com/in/sathishlella" strength={0.3}>
+            <span className="inline-flex items-center gap-3 rounded-full border border-ink/15 px-8 py-5 text-[15px] font-semibold text-ink transition-colors hover:border-accent/50 hover:text-accent">
+              LinkedIn
+              <span className="font-mono text-xs opacity-70">↗</span>
+            </span>
+          </MagneticButton>
+          <MagneticButton href="https://github.com/sathishlella" strength={0.3}>
+            <span className="inline-flex items-center gap-3 rounded-full border border-ink/15 px-8 py-5 text-[15px] font-semibold text-ink transition-colors hover:border-accent/50 hover:text-accent">
+              GitHub
+              <span className="font-mono text-xs opacity-70">↗</span>
+            </span>
+          </MagneticButton>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 1 }}
+          className="mt-20 grid grid-cols-2 gap-8 text-left md:grid-cols-4"
+        >
+          <Meta label="Based in" value="Selangor, Malaysia" />
+          <Meta label="Targeting" value="Singapore — On-site or EP-remote" />
+          <Meta label="Time zone" value="GMT+8 (SGT/MYT)" />
+          <Meta label="Phone" value="+60 11 1999 8931" />
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function Word({ word, delay, inView }: { word: string; delay: number; inView: boolean }) {
+  return (
+    <span className="inline-block overflow-hidden align-baseline pr-[0.18em]">
+      <motion.span
+        initial={{ y: "110%" }}
+        animate={inView ? { y: "0%" } : {}}
+        transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1], delay }}
+        className="inline-block"
+      >
+        {word}
+      </motion.span>
+    </span>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-faint">{label}</div>
+      <div className="mt-1.5 text-[14px] text-ink">{value}</div>
+    </div>
   );
 }

@@ -1,100 +1,70 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion";
+import { useState } from "react";
 
-const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Publications", href: "#publications" },
-  { label: "Contact", href: "#contact" },
+const links = [
+  { href: "#manifesto", label: "Manifesto" },
+  { href: "#agents", label: "Agents" },
+  { href: "#receipts", label: "Receipts" },
+  { href: "#experience", label: "Career" },
+  { href: "#research", label: "Research" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { scrollY, scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 80));
 
   return (
-    <motion.nav
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-        <a href="#" className="text-lg font-bold tracking-tight">
-          <span className="gradient-text">Sathish Lella</span>
-        </a>
-
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted hover:text-foreground transition-colors duration-200"
-            >
-              {link.label}
-            </a>
-          ))}
+    <>
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed left-1/2 top-4 z-50 -translate-x-1/2 transition-all duration-500 ${
+          scrolled
+            ? "w-[min(720px,calc(100vw-2rem))]"
+            : "w-[min(880px,calc(100vw-2rem))]"
+        }`}
+      >
+        <div
+          className={`flex items-center justify-between rounded-full border px-5 py-2.5 backdrop-blur-xl transition-colors ${
+            scrolled ? "border-ink/12 bg-bg/80" : "border-ink/8 bg-bg-soft/40"
+          }`}
+        >
           <a
-            href="mailto:sathishlellaa@gmail.com"
-            className="text-sm font-medium px-4 py-2 rounded-lg bg-surface border border-border hover:border-border-hover transition-colors duration-200"
+            href="#top"
+            className="font-display text-base font-semibold tracking-tight text-ink"
           >
-            Hire Me
+            Sathish <span className="text-accent italic">Lella.</span>
+          </a>
+          <div className="hidden items-center gap-7 md:flex">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-dim transition-colors hover:text-accent"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+          <a
+            href="#contact"
+            className="rounded-full bg-accent px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-bg transition-colors hover:bg-accent-warm"
+          >
+            Hire
           </a>
         </div>
+      </motion.nav>
 
-        <button
-          className="md:hidden text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border overflow-hidden"
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-sm text-muted hover:text-foreground transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="mailto:sathishlellaa@gmail.com"
-                className="text-sm font-medium px-4 py-2 rounded-lg bg-surface border border-border text-center"
-              >
-                Hire Me
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+      <motion.div
+        style={{ scaleX: progress, transformOrigin: "0% 50%" }}
+        className="fixed left-0 right-0 top-0 z-[60] h-[2px] bg-gradient-to-r from-accent via-violet to-cyan"
+      />
+    </>
   );
 }

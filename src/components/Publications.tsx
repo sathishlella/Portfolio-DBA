@@ -2,108 +2,141 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { FileText, ExternalLink } from "lucide-react";
 
-const publications = [
+interface Pub {
+  status: "published" | "under-review";
+  title: string;
+  venue: string;
+  year: string;
+  href?: string;
+  authors?: string;
+}
+
+const pubs: Pub[] = [
   {
-    title: "IEEE JBHI Publication",
-    description: "Manuscript under review in IEEE Journal of Biomedical and Health Informatics.",
+    status: "published",
+    title: "Real-Time Monitoring and Predictive Maintenance",
+    venue: "CRC Press / Wiley — Chapter 7, Industry 4.0 and Smart Manufacturing",
+    year: "2024",
+    href: "https://doi.org/10.1002/9781394303601.ch14",
+  },
+  {
+    status: "published",
+    title:
+      "Analysis of Received Signal Strength Based on User Position Locating by Using ML Method",
+    venue: "Springer — Lecture Notes in Networks and Systems",
+    year: "2021",
+    href: "https://link.springer.com/chapter/10.1007/978-981-15-7511-2_22",
+  },
+  {
+    status: "published",
+    title:
+      "Standardizing Denial Management in Behavioral Health: A Quantitative Audit Protocol for Practice Revenue-Cycle Maturity",
+    venue: "Zenodo — v1.0",
+    year: "2026",
+    href: "https://doi.org/10.5281/zenodo.18453640",
+    authors: "Lella, S., Amulya, G., & Ruthik Reddy, C.",
+  },
+  {
+    status: "under-review",
+    title:
+      "SynthERA-835: An Open-Source Synthetic X12 835 EDI Generator for Healthcare Claims Denial-Prediction Research",
     venue: "IEEE JBHI",
-    status: "Under Review",
-    link: "#",
+    year: "2026",
   },
   {
-    title: "Zenodo DOI 10.5281/zenodo.18453640",
-    description: "Published research dataset and methodology documentation.",
-    venue: "Zenodo",
-    status: "Published",
-    link: "https://doi.org/10.5281/zenodo.18453640",
-  },
-  {
-    title: "CRC Press — WILEY Publication",
-    description: "Contributed chapter on applied AI systems in healthcare.",
-    venue: "CRC Press / WILEY",
-    status: "Published",
-    link: "#",
-  },
-  {
-    title: "Springer Publication",
-    description: "Research on machine learning applications in business intelligence.",
-    venue: "Springer",
-    status: "Published",
-    link: "#",
+    status: "under-review",
+    title:
+      "Advanced Image Segmentation Analysis: A Comparative Study of CNN, Segment Anything, and U-Net Techniques",
+    venue: "Under review",
+    year: "2026",
   },
 ];
 
 export default function Publications() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
   return (
-    <section id="publications" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-        >
-          <span className="text-xs font-semibold tracking-widest text-accent-cyan uppercase mb-4 block">
-            Publications
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            Research & <span className="gradient-text">Publications</span>
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {publications.map((pub, i) => (
-              <motion.div
-                key={pub.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                className="group p-6 rounded-xl bg-surface border border-border hover:border-border-hover transition-all"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="p-2 rounded-lg bg-accent-violet/10 text-accent-violet">
-                    <FileText size={18} />
-                  </div>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-medium ${
-                      pub.status === "Published"
-                        ? "bg-accent-teal/10 text-accent-teal"
-                        : "bg-accent-cyan/10 text-accent-cyan"
-                    }`}
-                  >
-                    {pub.status}
-                  </span>
-                </div>
-
-                <h3 className="text-base font-semibold text-foreground mb-1 group-hover:text-accent-violet transition-colors">
-                  {pub.title}
-                </h3>
-                <div className="text-xs text-accent-violet/80 font-medium mb-2">
-                  {pub.venue}
-                </div>
-                <p className="text-sm text-muted leading-relaxed mb-3">
-                  {pub.description}
-                </p>
-
-                {pub.link !== "#" && (
-                  <a
-                    href={pub.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-accent-violet hover:text-accent-violet/80 transition-colors"
-                  >
-                    View Publication <ExternalLink size={13} />
-                  </a>
-                )}
-              </motion.div>
-            ))}
+    <section id="research" className="relative px-6 py-32 md:px-14 md:py-44">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="kicker mb-4">// RESEARCH</div>
+            <h2 className="headline text-[clamp(2.5rem,7vw,6rem)] text-ink">
+              Published &{" "}
+              <span className="headline-italic text-accent">under review.</span>
+            </h2>
           </div>
-        </motion.div>
+          <p className="max-w-md text-balance text-ink-dim">
+            Five peer-reviewed and pre-print contributions across healthcare AI,
+            machine learning, and Industry 4.0.
+          </p>
+        </div>
+
+        <div className="divide-y divide-ink/8 border-y border-ink/8">
+          {pubs.map((p, i) => (
+            <PubRow key={i} pub={p} index={i} />
+          ))}
+        </div>
       </div>
     </section>
+  );
+}
+
+function PubRow({ pub, index }: { pub: Pub; index: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+
+  const content = (
+    <div className="grid grid-cols-12 items-center gap-4 py-7 md:gap-6 md:py-9">
+      <div className="col-span-12 md:col-span-1">
+        <span className="font-mono text-xs tracking-[0.25em] text-accent">0{index + 1}</span>
+      </div>
+      <div className="col-span-12 md:col-span-7">
+        <h3 className="font-display text-[clamp(1.15rem,1.8vw,1.5rem)] font-semibold leading-snug text-ink">
+          {pub.title}
+        </h3>
+        {pub.authors && (
+          <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+            {pub.authors}
+          </div>
+        )}
+      </div>
+      <div className="col-span-8 md:col-span-3">
+        <div className="text-[13px] text-ink-dim">{pub.venue}</div>
+        <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-faint">
+          {pub.year}
+        </div>
+      </div>
+      <div className="col-span-4 md:col-span-1 text-right">
+        {pub.status === "published" ? (
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Published
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-ink-dim">
+            <span className="h-1.5 w-1.5 rounded-full bg-ink/30" /> Review
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  const wrapped = pub.href ? (
+    <a href={pub.href} target="_blank" rel="noopener noreferrer" className="block">
+      {content}
+    </a>
+  ) : (
+    content
+  );
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
+      className="group transition-colors hover:bg-ink/[0.03]"
+    >
+      {wrapped}
+    </motion.div>
   );
 }

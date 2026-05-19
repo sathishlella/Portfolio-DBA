@@ -1,23 +1,25 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Projects from "@/components/Projects";
+import Manifesto from "@/components/Manifesto";
+import Agents from "@/components/Agents";
+import Receipts from "@/components/Receipts";
 import Experience from "@/components/Experience";
-import Skills from "@/components/Skills";
 import Publications from "@/components/Publications";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import Cursor from "@/components/Cursor";
 
 export default function Home() {
   return (
     <>
+      <Cursor />
       <Navbar />
-      <main className="flex-1">
+      <main className="relative">
         <Hero />
-        <About />
-        <Projects />
+        <Manifesto />
+        <Agents />
+        <Receipts />
         <Experience />
-        <Skills />
         <Publications />
         <Contact />
       </main>

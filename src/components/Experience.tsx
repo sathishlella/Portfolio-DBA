@@ -1,119 +1,166 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 
-const roles = [
+interface Role {
+  status: "active" | "past";
+  title: string;
+  company: string;
+  period: string;
+  location: string;
+  body: string;
+  stack: string[];
+}
+
+const roles: Role[] = [
   {
+    status: "active",
+    title: "Founding Engineer",
     company: "F1 Dream Jobs",
-    title: "Chief Technology Officer",
-    period: "Feb 2026 – Present",
-    location: "Remote",
-    highlights: [
-      "Built fullstack AI CRM from scratch (React, Node.js, PostgreSQL, GPT-4)",
-      "RAG pipeline processing 200+ CVs/day with semantic matching",
-      "Onboarded 220+ candidates onto LLM-powered tools",
-      "Reduced manual screening effort by 70%+",
-    ],
+    period: "Feb 2026 — Present",
+    location: "India · Remote",
+    body: "Sole technical owner of an AI-powered recruiting platform. Built a fullstack CRM from scratch (TypeScript + React + Node + Postgres + GPT-4) processing 200+ CVs/day. Designed a RAG pipeline with vector DB for semantic candidate matching. AI agents for outreach, interview prep, and screening reduced manual recruiter effort by 70%+.",
+    stack: ["TypeScript", "React", "Node.js", "PostgreSQL", "GPT-4", "Claude API", "Vercel"],
   },
   {
-    company: "Velden Health",
+    status: "past",
     title: "Founder & Technical Lead",
-    period: "Jun 2025 – Apr 2026",
-    location: "Greater Chicago Area · Hybrid",
-    highlights: [
-      "Built AI-powered revenue recovery system for healthcare",
-      "Predictive scoring and automated dashboards for 1,000+ insurance claims",
-      "Managed stakeholder relationships with healthcare professionals",
-    ],
+    company: "Velden Health",
+    period: "Jun 2025 — Apr 2026",
+    location: "Greater Chicago · Hybrid · Wound down",
+    body: "Founded a healthcare revenue recovery firm for outpatient behavioral-health practices. Built the entire technical infrastructure — a custom OS tracking 1,000+ insurance claims across the full denial lifecycle, A/R aging dashboards, denial-pattern automation, and predictive recovery scoring.",
+    stack: ["Python", "JavaScript", "Power BI", "SQL", "REST APIs"],
   },
   {
-    company: "Freelance",
+    status: "past",
     title: "AI Solutions Engineer & Data Specialist",
-    period: "May 2024 – May 2025",
+    company: "Freelance",
+    period: "May 2024 — May 2025",
     location: "Remote",
-    highlights: [
-      "Delivered custom AI solutions to multiple enterprise clients",
-      "AI resume ranker + job matching bot (GPT-4, vector DB)",
-      "GPT-based interview agent with 4.7/5 avg rating from 50+ users",
-    ],
+    body: "Built and deployed a GPT-4 + vector-DB resume ranker auto-screening 200+ CVs/day with 78% manual-time reduction. Delivered a GPT-based interview agent rated 4.7/5 by 50+ users. Automated weekly Power BI reports eliminating ~10 hours/month of manual Excel work for clients.",
+    stack: ["GPT-4", "Vector DB", "Python", "Power BI"],
   },
   {
-    company: "Mphasis",
+    status: "past",
+    title: "Academic Graduate Assistant",
+    company: "Lewis University",
+    period: "Jan 2024 — May 2024",
+    location: "Romeoville, Illinois · On-site",
+    body: "Instructed undergraduates in data analytics and Big Data programming. Collaborated on advanced data-science research initiatives with faculty.",
+    stack: ["Python", "Data Analytics", "Research"],
+  },
+  {
+    status: "past",
     title: "Associate Software Engineer",
-    period: "Aug 2021 – Dec 2022",
+    company: "Mphasis",
+    period: "Aug 2021 — Dec 2022",
     location: "Bangalore, India",
-    highlights: [
-      "UI enhancements with JavaScript → 20% increase in user engagement",
-      "API key generation scripts (SQL + NoSQL) → 50% reduction in manual effort",
-    ],
+    body: "UI enhancements with JavaScript + database integration → 20% user-engagement lift, 15% load-time reduction. Built SQL + NoSQL API-key generation scripts cutting manual authentication effort by 50%. Postman endpoint testing in a Scrum/Agile framework with Git.",
+    stack: ["JavaScript", "SQL", "NoSQL", "Postman", "Git"],
   },
 ];
 
 export default function Experience() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.3", "end 0.7"],
+  });
+  const lineY = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), {
+    stiffness: 60,
+    damping: 24,
+  });
 
   return (
-    <section id="experience" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-        >
-          <span className="text-xs font-semibold tracking-widest text-accent-cyan uppercase mb-4 block">
-            Experience
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            Where I have <span className="gradient-text">built</span>
+    <section ref={ref} id="experience" className="relative px-6 py-32 md:px-14 md:py-44">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mb-20">
+          <div className="kicker mb-4">// TRAJECTORY</div>
+          <h2 className="headline text-[clamp(2.5rem,7vw,6rem)] text-ink">
+            Five years.{" "}
+            <span className="headline-italic text-accent">Three companies.</span>
           </h2>
+        </div>
 
-          <div className="space-y-10">
+        <div className="relative grid grid-cols-1 gap-16 md:grid-cols-[200px_1fr] md:gap-12">
+          <div className="pointer-events-none absolute left-2 top-2 hidden h-full w-px bg-ink/8 md:block md:left-[8px]">
+            <motion.div
+              style={{ height: lineY }}
+              className="w-px origin-top bg-gradient-to-b from-accent via-violet to-cyan"
+            />
+          </div>
+
+          <div className="hidden md:block" aria-hidden />
+          <div className="space-y-24">
             {roles.map((role, i) => (
-              <motion.div
-                key={role.company + role.period}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                className="relative pl-8 md:pl-0"
-              >
-                <div className="hidden md:block absolute left-[140px] top-2 bottom-0 w-px bg-border" />
-                <div className="hidden md:block absolute left-[136px] top-2 w-2.5 h-2.5 rounded-full bg-accent-cyan ring-4 ring-accent-cyan/20" />
-
-                <div className="md:grid md:grid-cols-[140px_1fr] md:gap-8">
-                  <div className="text-sm text-muted font-mono mb-2 md:mb-0 md:text-right">
-                    {role.period}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {role.title}
-                    </h3>
-                    <div className="text-sm text-accent-violet font-medium mb-1">
-                      {role.company}
-                    </div>
-                    <div className="text-xs text-muted-dark mb-3">
-                      {role.location}
-                    </div>
-                    <ul className="space-y-1.5">
-                      {role.highlights.map((h) => (
-                        <li
-                          key={h}
-                          className="text-sm text-muted leading-relaxed flex items-start gap-2"
-                        >
-                          <span className="text-accent-cyan mt-1.5">·</span>
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </motion.div>
+              <RoleBlock key={i} role={role} index={i} />
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
+  );
+}
+
+function RoleBlock({ role, index }: { role: Role; index: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.05 * index }}
+      className="relative"
+    >
+      <div className="absolute -left-[44px] top-3 hidden md:block">
+        <div
+          className={`relative h-4 w-4 rounded-full ${
+            role.status === "active" ? "bg-accent" : "bg-ink/15"
+          }`}
+        >
+          {role.status === "active" && (
+            <div className="absolute inset-0 animate-ping rounded-full bg-accent opacity-60" />
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:gap-12">
+        <div className="md:w-[180px] md:pt-1">
+          <div className="font-mono text-xs uppercase tracking-[0.25em] text-ink-dim">
+            {role.period}
+          </div>
+          <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+            {role.location}
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <div className="mb-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="headline text-[clamp(1.5rem,2.8vw,2.4rem)] text-ink">
+              {role.title}
+            </h3>
+            <span className="font-display text-2xl italic text-accent">@ {role.company}</span>
+          </div>
+
+          <p className="mt-4 max-w-[68ch] text-[15px] leading-relaxed text-ink-dim">
+            {role.body}
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {role.stack.map((s) => (
+              <span
+                key={s}
+                className="rounded-full border border-ink/8 px-3 py-1 font-mono text-[10px] tracking-widest text-ink-dim"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
